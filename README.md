@@ -73,7 +73,7 @@ git clone https://github.com/tomska888/War---card-game-TC.git
 ```
 2. Navigate to the repository:
 ```
-cd War---card-game-TC.git
+cd War---card-game-TC
 ```
 3. Run the game:
 ```
