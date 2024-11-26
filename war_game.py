@@ -16,16 +16,15 @@ class Card:
     
 class Deck:
     def __init__(self):
-        suits = ['♠', '♥', '♦', '♣']
-        ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10',
+        SUITS = ['♠', '♥', '♦', '♣']
+        RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10',
                  'J', 'Q', 'K', 'A']
         self.cards = [Card(rank, suit) for suit in suits for rank in ranks]
 
     def shuffle(self):
         random.shuffle(self.cards)
 
-    def deal_half(self):
-        return self.cards[:26], self.cards[26:]
+    
     
 class Game:
     def __init__(self, player1, player2):
@@ -68,13 +67,27 @@ class Player:
         self.hand = []
 
     def play_card(self):
-        
+        if self.hand:
+            return self.hand.pop(0)
+        return None
+
+    def deal_half(self):
+        self.player1.hand = self.cards[:26]
+        self.player2.hand = self.cards[26:]
+
+    def has_cards(self):
+        if len(self.hand) > 0:
+            return True
+        else:
+            return False
+    
+    def collect_card(self, cards):
+        self.player1.hand.append(cards)
 
 
 if __name__ == "__main__":
-    deck = Deck()
-    deck.shuffle()
-    deck.deal_half()
+    main_deck = Deck()
+    main_deck.shuffle()
 
     player1 = Player("Player1")
     player2 = Player("Player2")
