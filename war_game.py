@@ -19,21 +19,28 @@ class Deck:
         SUITS = ['♠', '♥', '♦', '♣']
         RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10',
                  'J', 'Q', 'K', 'A']
-        self.cards = [Card(rank, suit) for suit in suits for rank in ranks]
+        self.cards = [Card(rank, suit) for suit in SUITS for rank in RANKS]
 
     def shuffle(self):
         random.shuffle(self.cards)
 
-    
+    def deal_half(self):
+        return self.cards[:26], self.cards[26:]
     
 class Game:
-    def __init__(self, player1, player2):
-        self.player1 = player1
-        self.player2 = player2
+    def __init__(self, player1_name, player2_name):
+        self.player1 = Player(player1_name)
+        self.player2 = Player(player2_name)
         self.round_count = 0
+        self.deck = Deck()
+        self.deck.shuffle()
+        half1, half2 = self.deck.deal_half()
+        self.player1.hand = half1
+        self.player2.hand = half2
 
     def play_round(self):
-        print(f"Round {self.round_count + 1}:")
+        self.round_count += 1
+        print(f"\nRound {self.round_count}:")
 
         if not self.player1.has_cards():
             print(f"{self.player1.name} win the game!")
@@ -52,7 +59,10 @@ class Game:
         elif card2.value > card1.value:
             print(f"{self.player2.name} wins the round!")
             self.player2.collect_card([card1,card2])
-
+        else:
+            print(f"It's a tie! War begins!")
+            
+        return True
 
     def play_game(self):
         print("Start the game!")
@@ -71,23 +81,16 @@ class Player:
             return self.hand.pop(0)
         return None
 
-    def deal_half(self):
-        self.player1.hand = self.cards[:26]
-        self.player2.hand = self.cards[26:]
-
     def has_cards(self):
-        if len(self.hand) > 0:
-            return True
-        else:
-            return False
+        return len(self.hand) > 0
     
     def collect_card(self, cards):
-        self.player1.hand.append(cards)
+        self.hand.extend(cards)
+
+    def __str__(self):
+        return f"{self.name} (Cards left: {len(self.hand)})"
 
 
 if __name__ == "__main__":
-    main_deck = Deck()
-    main_deck.shuffle()
-
-    player1 = Player("Player1")
-    player2 = Player("Player2")
+    game = Game("Player 1", "Player 2")
+    game.play_game()
